@@ -162,8 +162,3 @@ careconnect/
   .github/workflows/deploy.yml
 ```
 
-## Resume description
-Built and deployed a containerized Flask + MySQL healthcare appointment platform on AWS using Terraform, Docker, ECR,
-EC2 Auto Scaling, Application Load Balancer and private RDS. Implemented GitHub Actions CI/CD with OIDC authentication
-and zero-downtime rolling instance refresh, Secrets Manager credential handling with rotation-aware reconnects,
-CloudWatch dashboards/alarms with SNS alerting, and verified automatic replacement of failed instances.
