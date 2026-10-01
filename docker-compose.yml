@@ -1,0 +1,27 @@
+# Full local stack:  docker compose up --build   ->  http://localhost:5000
+services:
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: careconnect
+      MYSQL_USER: careconnect
+      MYSQL_PASSWORD: localpass
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-prootpass"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+  app:
+    build: .
+    ports: ["5000:5000"]
+    environment:
+      DB_HOST: db
+      DB_NAME: careconnect
+      DB_USER: careconnect
+      DB_PASSWORD: localpass
+      SECRET_KEY: local-dev-secret
+      ENABLE_STRESS: "true"
+    depends_on:
+      db:
+        condition: service_healthy

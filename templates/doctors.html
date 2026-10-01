@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Doctors &ndash; CareConnect{% endblock %}
+{% block content %}
+<h2>Our doctors</h2>
+<div class="grid">
+{% for d in doctors %}
+  <div class="card doc">
+    <h3>{{ d.name }}</h3>
+    <p class="muted">{{ d.specialization }}</p>
+    <p>{{ d.experience }} years experience<br><span class="muted">Available: {{ d.available_days }}</span></p>
+    <a class="btn" href="{{ url_for('book', doctor_id=d.id) }}">Book appointment</a>
+  </div>
+{% else %}
+  <p>No doctors are listed yet.</p>
+{% endfor %}
+</div>
+{% endblock %}

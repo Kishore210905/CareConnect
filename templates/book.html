@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Book appointment &ndash; CareConnect{% endblock %}
+{% block content %}
+<div class="card narrow">
+  <h2>Book with {{ doctor.name }}</h2>
+  <p class="muted">{{ doctor.specialization }} &middot; available {{ doctor.available_days }}, 09:00&ndash;17:00 (30-minute slots)</p>
+  <form method="post" class="stack">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label>Date and time</label>
+    <input type="datetime-local" name="appointment_date" min="{{ min_dt }}" step="1800" required value="{{ request.form.get('appointment_date','') }}">
+    <label>Reason for visit</label>
+    <textarea name="reason" rows="4" maxlength="500" required>{{ request.form.get('reason','') }}</textarea>
+    <p><button class="btn">Confirm booking</button> <a class="btn ghost" href="{{ url_for('doctors') }}">Back</a></p>
+  </form>
+</div>
+{% endblock %}

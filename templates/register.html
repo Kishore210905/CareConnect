@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Register &ndash; CareConnect{% endblock %}
+{% block content %}
+<div class="card narrow">
+  <h2>Create your account</h2>
+  <form method="post" class="stack">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label>Full name</label><input name="name" maxlength="100" required value="{{ request.form.get('name','') }}">
+    <label>Email</label><input type="email" name="email" maxlength="150" required value="{{ request.form.get('email','') }}">
+    <label>Password (min 8 characters)</label><input type="password" name="password" minlength="8" required>
+    <label>Confirm password</label><input type="password" name="confirm" required>
+    <p><button class="btn">Register</button></p>
+  </form>
+  <p class="muted">Already registered? <a href="{{ url_for('login') }}">Sign in</a></p>
+</div>
+{% endblock %}

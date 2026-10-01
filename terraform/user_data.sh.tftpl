@@ -1,0 +1,36 @@
+#!/bin/bash
+set -euxo pipefail
+exec > >(tee /var/log/user-data.log) 2>&1
+
+dnf install -y docker
+systemctl enable --now docker
+
+REGION="${aws_region}"
+IMAGE="${ecr_repo_url}:latest"
+
+aws ecr get-login-password --region "$REGION" | docker login --username AWS --password-stdin "${ecr_registry}"
+
+# Retry pull: on a brand-new environment the first image may not be pushed yet
+for i in $(seq 1 30); do
+  if docker pull "$IMAGE"; then
+    break
+  fi
+
+  echo "Image not available yet, retry $i"
+  sleep 20
+
+  if [ "$i" -eq 30 ]; then
+    echo "ERROR: Failed to pull $IMAGE after 30 attempts"
+    exit 1
+  fi
+done
+
+# No passwords here: the app receives only secret ARNs and reads the secrets itself
+# through the instance role (and re-reads the DB secret after RDS password rotation).
+docker rm -f careconnect || true
+docker run -d --name careconnect --restart always --hostname "$(hostname)" -p 5000:5000 \
+  -e AWS_REGION="$REGION" -e AWS_DEFAULT_REGION="$REGION" \
+  -e DB_HOST="${db_host}" -e DB_NAME="${db_name}" \
+  -e DB_SECRET_ARN="${db_secret_arn}" -e APP_SECRET_ARN="${app_secret_arn}" \
+  -e ENABLE_STRESS="${enable_stress}" \
+  "$IMAGE"

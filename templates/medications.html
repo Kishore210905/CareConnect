@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Medications &ndash; CareConnect{% endblock %}
+{% block content %}
+<h2>My medications</h2>
+<div class="card" style="margin-bottom:18px">
+  <form method="post" class="stack">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="grid">
+      <div><label>Medicine</label><input name="medicine" maxlength="150" required></div>
+      <div><label>Dosage</label><input name="dosage" maxlength="100" placeholder="e.g. 500 mg"></div>
+      <div><label>Schedule</label><input name="schedule" maxlength="100" placeholder="e.g. Twice daily after meals"></div>
+    </div>
+    <p><button class="btn">Add medication</button></p>
+  </form>
+</div>
+<div class="table-wrap"><table>
+  <thead><tr><th>Medicine</th><th>Dosage</th><th>Schedule</th><th>Added</th><th></th></tr></thead>
+  <tbody>
+  {% for m in medications %}
+    <tr>
+      <td>{{ m.medicine }}</td><td>{{ m.dosage }}</td><td>{{ m.schedule }}</td>
+      <td class="muted">{{ m.created_at.strftime('%d %b %Y') }}</td>
+      <td>
+        <form class="inline" method="post" action="{{ url_for('medication_delete', med_id=m.id) }}" data-confirm="Remove this medication?">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button class="btn danger sm">Remove</button>
+        </form>
+      </td>
+    </tr>
+  {% else %}
+    <tr><td colspan="5" class="muted">No medications recorded.</td></tr>
+  {% endfor %}
+  </tbody>
+</table></div>
+{% endblock %}

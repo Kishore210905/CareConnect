@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Appointments &ndash; CareConnect{% endblock %}
+{% block content %}
+<div class="row-between"><h2>My appointments</h2><a class="btn" href="{{ url_for('doctors') }}">+ Book new</a></div>
+<div class="table-wrap"><table>
+  <thead><tr><th>When</th><th>Doctor</th><th>Reason</th><th>Status</th><th></th></tr></thead>
+  <tbody>
+  {% for a in appointments %}
+    <tr>
+      <td>{{ a.appointment_date.strftime('%a, %d %b %Y %H:%M') }}</td>
+      <td>{{ a.doctor_name }}<br><span class="muted">{{ a.specialization }}</span></td>
+      <td>{{ a.reason }}</td>
+      <td><span class="badge {{ a.status }}">{{ a.status }}</span></td>
+      <td>
+        {% if a.status == 'Booked' and a.appointment_date >= now %}
+        <form class="inline" method="post" action="{{ url_for('cancel', appointment_id=a.id) }}" data-confirm="Cancel this appointment?">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button class="btn danger sm">Cancel</button>
+        </form>
+        {% endif %}
+      </td>
+    </tr>
+  {% else %}
+    <tr><td colspan="5" class="muted">No appointments yet.</td></tr>
+  {% endfor %}
+  </tbody>
+</table></div>
+{% endblock %}

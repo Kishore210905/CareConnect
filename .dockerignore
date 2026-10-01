@@ -1,0 +1,12 @@
+.git
+.github
+terraform
+tests
+venv
+.venv
+__pycache__
+*.pyc
+.env
+README.md
+docker-compose.yml
+conftest.py

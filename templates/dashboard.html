@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Dashboard &ndash; CareConnect{% endblock %}
+{% block content %}
+<h2>Welcome, {{ name }}</h2>
+<div class="grid">
+  <div class="card stat"><div class="muted">Upcoming appointments</div><div class="n">{{ upcoming }}</div></div>
+  <div class="card stat"><div class="muted">Medications on record</div><div class="n">{{ meds }}</div></div>
+  <div class="card">
+    <div class="muted">Next appointment</div>
+    {% if nxt %}
+      <p><b>{{ nxt.appointment_date.strftime('%a, %d %b %Y at %H:%M') }}</b><br>{{ nxt.doctor_name }} &ndash; {{ nxt.specialization }}</p>
+    {% else %}
+      <p>None scheduled.</p>
+    {% endif %}
+  </div>
+</div>
+<p style="margin-top:20px">
+  <a class="btn" href="{{ url_for('doctors') }}">Book an appointment</a>
+  <a class="btn ghost" href="{{ url_for('medications') }}">Manage medications</a>
+</p>
+{% endblock %}

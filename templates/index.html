@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}CareConnect &ndash; Healthcare made simple{% endblock %}
+{% block content %}
+<section class="hero">
+  <h1>Your health, organised.</h1>
+  <p>Find a doctor, book and manage appointments, and keep track of your medications &ndash; all in one secure place.</p>
+  {% if session.get('uid') %}
+    <a class="btn light" href="{{ url_for('dashboard') }}">Go to dashboard</a>
+  {% else %}
+    <a class="btn light" href="{{ url_for('register') }}">Create free account</a>
+    <a class="btn ghost" href="{{ url_for('login') }}">Sign in</a>
+  {% endif %}
+</section>
+<div class="grid">
+  <div class="card"><h3>Find a specialist</h3><p class="muted">Browse doctors by specialization, experience and available days.</p><a href="{{ url_for('doctors') }}">View doctors</a></div>
+  <div class="card"><h3>Book in seconds</h3><p class="muted">Pick a slot that suits you. Double-bookings are prevented automatically.</p></div>
+  <div class="card"><h3>Medication tracker</h3><p class="muted">Record medicines, dosage and schedule so nothing is missed.</p></div>
+</div>
+{% endblock %}
